@@ -4,8 +4,12 @@ import helmet from "helmet";
 import morgan from "morgan";
 import collectionRoutes from "./routes.js";
 import reportRoutes from "./reports.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const frontendDist = path.join(__dirname, "../frontend/dist");
 
 app.use(helmet());
 app.use(
@@ -22,12 +26,16 @@ app.get("/api/health", (req, res) => {
     service: "Barangay Eco-Waste API"
   });
 });
-
 app.use("/api/collections", collectionRoutes);
 app.use("/api/reports", reportRoutes);
 
+app.use(express.static(frontendDist));
+
 app.use((req, res) => {
-  res.status(404).json({ message: "Endpoint not found." });
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ message: "Endpoint not found." });
+  }
+  res.sendFile(path.join(frontendDist, "index.html"));
 });
 
 app.use((error, req, res, next) => {
