@@ -14,8 +14,9 @@ const initialForm = {
 
 const STATUSES = ["Scheduled", "Collected", "Missed"];
 
+const API_URL = import.meta.env.VITE_API_URL || "";
 async function request(url, options) {
-  const response = await fetch(url, options);
+  const response = await fetch(`${API_URL}${url}`, options);
   const text = await response.text();
   const data = text ? JSON.parse(text) : {};
   if (!response.ok) {
