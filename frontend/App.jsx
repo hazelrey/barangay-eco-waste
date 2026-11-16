@@ -92,7 +92,7 @@ export default function App() {
   }, []);
 
   async function handleSubmit(event) {
-    Event.preventDefault();
+    event.preventDefault();
     setSaving(true);
     setMessage("");
     try {
